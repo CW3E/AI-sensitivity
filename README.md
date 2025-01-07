@@ -15,6 +15,6 @@ The SFNO model and related statistics (means and standard deviations fields) can
 ## References
 [1] Bonev, B., Kurth, T., Hundt, C., Pathak, J., Baust, M., Kashinath, K., & Anandkumar, A. (2023, July). Spherical fourier neural operators: Learning stable dynamics on the sphere. In International conference on machine learning (pp. 2806-2823). PMLR.
 
-[2] 
+[2] Baño-Medina, et al. Data from: Are AI weather models learning atmospheric physics? A sensitivity analysis of cyclone Xynthia. UC San Diego Library Digital Collections. https://doi.org/10.6075/J0QV3MWT (2024b)
 
 [3] Doyle, J. D., Amerault, C., Reynolds, C. A., & Reinecke, P. A. (2014). Initial condition sensitivity and predictability of a severe extratropical cyclone using a moist adjoint. Monthly Weather Review, 142(1), 320-342.
