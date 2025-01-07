@@ -114,13 +114,12 @@ for ind_exp, exp in enumerate(experiments):
         fig_=ax[i,j].contourf(evolved_perturbation.longitude,
                                 evolved_perturbation.latitude,
                                 evolved_perturbation,
-                                levels=np.linspace(-20, 20, 21),
+                                levels=np.linspace(-50, 50, 21),
                                 cmap=cmap,
                                 extend='both',
                                 linewidths=0.5,
                                 transform=ccrs.PlateCarree())
-        cbar=fig.colorbar(fig_, ax=ax[i,j], ticks=[-20,-10,0,10,20], fraction=0.035, pad=0.045, orientation="horizontal")
-        # cbar=fig.colorbar(fig_, ax=ax[i,j], ticks=[-5,-2.5,0,2.5,5], fraction=0.035, pad=0.045, orientation="horizontal")
+        cbar=fig.colorbar(fig_, ax=ax[i,j], ticks=[-50,-25,0,25,50], fraction=0.035, pad=0.045, orientation="horizontal")
         cbar.set_label("ΔKE (m²/s²)", rotation=0, labelpad=5, fontsize=10)
         cbar.ax.tick_params(labelsize=8)
         # Metadata of the plot

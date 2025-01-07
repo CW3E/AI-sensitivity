@@ -34,6 +34,7 @@ import wrf
 ## Set the working directory
 workdir='/expanse/nfs/cw3e/cwp167/projects/test-adjoint/github/test/'
 os.chdir(workdir)
+# Scripts available at: https://github.com/ecmwf-lab/ai-models-fourcastnetv2/blob/main/ai_models_fourcastnetv2/fourcastnetv2/sfnonet.py
 exec(open(workdir+'/utils-do-not-upload-to-github/sfnonet.py').read())
 exec(open(workdir+'/utils-do-not-upload-to-github/load_sfno.py').read())
 for file in os.listdir(workdir+'/utils/'):
@@ -134,19 +135,5 @@ for lead_time in lead_times:
     # Build xarray object
     g=array_to_xarray(g, sfno_vars, data_ic[sfno_vars[0]].dims, data_ic)
     # Save the sensitivities
-    # g.to_netcdf(workdir+'data/'+modelName+'/gradients/rgradients-lt'+str(lead_time)+'.nc')
-    ##########################################
-    # Post-process the sensitivities (smooth the gradients with a convolutional filter)
-    g_smooth=[]
-    for var in sfno_vars:
-        gs=wrf.smooth2d(g[var],passes=25)
-        g_smooth.append(gs)
-    g2=xr.merge(g_smooth)
-    g2=[g2.rename({'smooth_'+var: var})[var] for var in sfno_vars]
-    g2=xr.merge(g2)
-    g2.to_netcdf(workdir+'data/'+modelName+'/gradients/gradients-lt'+str(lead_time)+'.nc')
-    # Free memory
-    del g, g2
-    gc.collect()
-    gc.collect()
+    g.to_netcdf(workdir+'data/'+modelName+'/gradients/gradients-lt'+str(lead_time)+'.nc')
 #############################################

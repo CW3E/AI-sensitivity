@@ -73,8 +73,8 @@ for ind_exp, type in enumerate(types):
         evolved_perturbation=changeLongitudeProjection(evolved_perturbation).sel(longitude=lons, latitude=lats)
         #######
         # Display the evolved perturbation fields
-        levels=np.linspace(-20, 20, 21)
-        ticks=[-20,-10,0,10,20]
+        levels=np.linspace(-50, 50, 21)
+        ticks=[-50,-25,0,25,50]
         cmap=matplotlib.colors.LinearSegmentedColormap.from_list("", ["blue","turquoise","mediumaquamarine","white","white","yellow","red","pink"])
         fig_=ax[i,j].contourf(evolved_perturbation.longitude,
                               evolved_perturbation.latitude,

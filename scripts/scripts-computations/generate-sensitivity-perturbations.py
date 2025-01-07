@@ -31,11 +31,31 @@ import gc
 ## Set the working directory
 workdir='/expanse/nfs/cw3e/cwp167/projects/test-adjoint/github/test/'
 os.chdir(workdir)
-exec(open(workdir+'/utils-do-not-upload-to-github/sfnonet.py').read())
-exec(open(workdir+'/utils-do-not-upload-to-github/load_sfno.py').read())
 for file in os.listdir(workdir+'/utils/'):
     if file.endswith('.py') and file.strip('._')==file:
         exec(open(workdir+'/utils/'+file).read())
+#################### Replace nans function ##################
+def replace_nans(grid):
+    vars=list(grid.keys())
+    out=[]
+    # Loop over the variables
+    for var in vars:
+        arr=grid[var].values
+        if np.any(np.isnan(arr)):
+            idx=np.where(np.isnan(arr))
+            num_nans=len(idx[0])
+            for idx_nan in range(num_nans):
+                idx_x=idx[0][idx_nan]
+                idx_y=idx[1][idx_nan]
+                arr[idx_x,idx_y]=arr[idx_x-1,idx_y-1]
+                ## xarray object
+                out_var=xr.Dataset(data_vars={var: (grid[var].dims, arr)}, coords=grid.coords)
+        else:
+            out_var=grid[var]
+        # Append variables
+        out.append(out_var)
+    # Return object
+    return xr.merge(out)
 #################### Define setup parameters ##################
 modelName='sfno'
 sfno_vars=["uas","vas","u100","v100","tas","sp","mslp","tcwv",
@@ -59,9 +79,13 @@ print('Lead time: '+str(lead_time))
 date_ic=date_peak-np.timedelta64(lead_time, 'h')
 ##########################################
 # Load data
-data_ic=get_date_ic_sfno(date_ic=date_ic, path_data=workdir+'data/era5/', vars=sfno_vars)
-data_peak=get_date_ic_sfno(date_ic=date_peak, path_data=workdir+'data/era5/', vars=sfno_vars).assign_coords({'time': data_ic.time})
+data=xr.open_dataset(workdir+'data/sfno/predictions/control-forecast-lt36.nc')
+data_ic=data.isel(time=0)
+data_peak=data.isel(time=6).assign_coords({'time': data_ic.time})
+data_peak=replace_nans(data_peak) # Some grid-points (< 30, 0.003% of points) present NaN in the forecasted fields. Replacing them with their closest value in space.
+# Scale
 w=1/((data_peak-data_ic)**2)
+w=w.expand_dims(dim='time', axis=0)
 # Load gradients
 gradients=xr.open_dataset(workdir+'data/'+modelName+'/gradients/gradients-lt'+str(lead_time)+'.nc')
 # Generate perturbations

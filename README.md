@@ -4,7 +4,6 @@ This repository contains the material and guidelines to reproduce the results pr
 * scripts --> Main executable scripts.
   * scripts-computations: A folder containing Python scripts to compute the sensitivities and produce the AI-simulated runs.
     * `gradients.py`: Python script that computes the sensitivity fields at different lead times for the kinetic energy at the Bay of Biscay, using the SFNO AI-model. Note that this script can be easily modified to suit other variable/s, lead time/s and domain/s of interest.
-    * `gradients-standardized.py`: Same as `gradients.py`, but computes the sensitivities with respect to the standardized input fields.
     * `generate-sensitivity-perturbations.py`: Python script that scales the sensitivity fields up to values compatible to estimates of initial condition uncertainty following the methodology described in [3]. The resulting fields are the perturbation fields which are later used to perturb the initial condition in the perturbed simulations.
     * `inference.py`: Python script that simulates the evolution of cyclone Xynthia based on the control and perturbed intitial conditions.
   * `scripts-download-era5`: A folder containing Python scripts to download ERA5 pressure and surface variables from the Climate Data Store (CDS). 
@@ -15,5 +14,7 @@ The SFNO model and related statistics (means and standard deviations fields) can
 
 ## References
 [1] Bonev, B., Kurth, T., Hundt, C., Pathak, J., Baust, M., Kashinath, K., & Anandkumar, A. (2023, July). Spherical fourier neural operators: Learning stable dynamics on the sphere. In International conference on machine learning (pp. 2806-2823). PMLR.
+
 [2] 
+
 [3] Doyle, J. D., Amerault, C., Reynolds, C. A., & Reinecke, P. A. (2014). Initial condition sensitivity and predictability of a severe extratropical cyclone using a moist adjoint. Monthly Weather Review, 142(1), 320-342.

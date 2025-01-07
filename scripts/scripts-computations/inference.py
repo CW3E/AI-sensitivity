@@ -31,6 +31,7 @@ import gc
 ## Set the working directory
 workdir='/expanse/nfs/cw3e/cwp167/projects/test-adjoint/github/test/'
 os.chdir(workdir)
+# Scripts available at: https://github.com/ecmwf-lab/ai-models-fourcastnetv2/blob/main/ai_models_fourcastnetv2/fourcastnetv2/sfnonet.py
 exec(open(workdir+'/utils-do-not-upload-to-github/sfnonet.py').read())
 exec(open(workdir+'/utils-do-not-upload-to-github/load_sfno.py').read())
 for file in os.listdir(workdir+'/utils/'):
@@ -84,20 +85,14 @@ if forecast_type=="perturbed":
     perturbation_field=xr.open_dataset(workdir+'data/'+modelName+'/perturbations/perturbations-lt'+str(lead_time)+'.nc')
     if perturbation_type=='pos':
         data_ic=perturb_input_vars(grid=data_ic,
-                                    perturbation=perturbation_field,
-                                    vars_set=sfno_vars,
-                                    along=["uas","vas","tas","tcwv",
-                                           "ua50","ua100","ua150","ua200","ua250","ua300","ua400","ua500","ua600","ua700","ua850","ua925","ua1000",
-                                           "va50","va100","va150","va200","va250","va300","va400","va500","va600","va700","va850","va925","va1000",
-                                           "ta50","ta100","ta150","ta200","ta250","ta300","ta400","ta500","ta600","ta700","ta850","ta925","ta1000"])
+                                   perturbation=perturbation_field,
+                                   vars_set=sfno_vars,
+                                   along=sfno_vars)
     else:
         data_ic=perturb_input_vars(grid=data_ic,
-                                    perturbation=perturbation_field*(-1),
-                                    vars_set=sfno_vars,
-                                    along=["uas","vas","tas","tcwv",
-                                           "ua50","ua100","ua150","ua200","ua250","ua300","ua400","ua500","ua600","ua700","ua850","ua925","ua1000",
-                                           "va50","va100","va150","va200","va250","va300","va400","va500","va600","va700","va850","va925","va1000",
-                                           "ta50","ta100","ta150","ta200","ta250","ta300","ta400","ta500","ta600","ta700","ta850","ta925","ta1000"])
+                                   perturbation=perturbation_field*(-1),
+                                   vars_set=sfno_vars,
+                                   along=sfno_vars)
     predName='perturbed-forecast-'+perturbation_type
 ##########################################
 # Scale grid

@@ -60,15 +60,13 @@ sfno_vars=["uas","vas","u100","v100","tas","sp","mslp","tcwv",
            "ta50","ta100","ta150","ta200","ta250","ta300","ta400","ta500","ta600","ta700","ta850","ta925","ta1000",
            "hur50","hur100","hur150","hur200","hur250","hur300","hur400","hur500","hur600","hur700","hur850","hur925","hur1000"]
 levels=[50,100,150,200,250,300,400,500,600,700,850,925,1000]
-start=(55,-38)
-end=(22,-10)
-start=(55,-38)
-end=(22,-15)
 start=(45,-38)
 end=(22,-10)
+# start=(52,-43)
+# end=(22.25,-10)
 ###########################################################################################
 ## Load adjoint fields
-grid_gradients=xr.open_dataset(workdir+'data/sfno/gradients/gradients-standardized-lt'+str(lead_time)+'.nc').isel(time=0)
+grid_gradients=xr.open_dataset(workdir+'data/sfno/gradients/gradients-lt'+str(lead_time)+'.nc').isel(time=0)
 grid_gradients=changeLongitudeProjection(grid_gradients).sel(longitude=lons, latitude=lats)
 grid_gradients=xr4D(grid_gradients, levels=levels,
                     pressure_vars=["ta","z","ua","va","hur"],
@@ -101,7 +99,7 @@ ax=plt.axes()
 ## Adjoint of relative humidity (contourf)
 cmap=matplotlib.colors.LinearSegmentedColormap.from_list("", ["purple","blue","turquoise","white","white","yellow","red","pink"])
 rh_contour=ax.contourf(cross['longitude'], cross['isobaric'], cross['hur'],
-                       levels=np.linspace(-0.0005, 0.0005, 21), cmap=cmap, extend="both")
+                       levels=np.linspace(-0.0007, 0.0007, 21), cmap=cmap, extend="both")
 rh_colorbar=fig.colorbar(rh_contour,format=ticker.FuncFormatter(fmt))
 # ## Potential temperature (contour)
 theta_contour=ax.contour(cross_era5['longitude'], cross_era5['isobaric'], cross_era5['Potential_temperature'],
@@ -127,10 +125,6 @@ ax_inset.plot(cross_era5['longitude'], cross_era5['latitude'], c='k', zorder=2)
 ax_inset.coastlines()
 # ## Set the titles and axes labels
 ax_inset.set_title('')
-# ax.set_title(f'NARR Cross-Section \u2013 {start} to {end} \u2013 '
-#              f'Valid: {cross["time"].dt.strftime("%Y-%m-%d %H:%MZ").item()}\n'
-#              'Potential Temperature (K), Tangential/Normal Winds (knots), Relative Humidity '
-#              '(dimensionless)\nInset: Cross-Section Path and 500 hPa Geopotential Height')
 ax.set_ylabel('Pressure (hPa)')
 ax.set_xlabel('Longitude (degrees east)')
 rh_colorbar.set_label('∂KE/∂RH')

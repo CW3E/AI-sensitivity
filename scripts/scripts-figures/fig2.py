@@ -40,7 +40,7 @@ for file in os.listdir(workdir+'/utils/'):
 ###############################################################
 vars=['tcwv','ta700','va700','z700','z700','z700']
 leadtimes=[36,36,36,48,36,24]
-variable_names=['Total column water vapour','Air surface temperature','Meridional wind at 700 hPa',
+variable_names=['Total column water vapour','Air temperature at 700 hPa','Meridional wind at 700 hPa',
                 'Geopotential at 700 hPa (Lead time: 24 hours)','Geopotential at 700 hPa (Lead time: 36 hours)','Geopotential at 700 hPa (Lead time: 48 hours)']
 lons=np.arange(-60,20+0.25,0.25)
 lats=np.arange(20,80+0.25,0.25)
@@ -64,22 +64,19 @@ for ind_var, var in enumerate(vars):
     date_ic=date_peak-np.timedelta64(leadtime, 'h')
     print('Lead time: '+str(leadtime)+' --- Variable: '+var)
     # Load grid
-    grid_gradients=xr.open_dataset(workdir+'data/sfno/gradients/gradients-standardized-lt'+str(leadtime)+'.nc').isel(time=0)
-    # grid_gradients=xr.open_dataset(workdir+'data/sfno/gradients-lt'+str(leadtime)+'.nc').isel(time=0)
+    grid_gradients=xr.open_dataset(workdir+'data/sfno/gradients/gradients-lt'+str(leadtime)+'.nc').isel(time=0)
     grid_gradients=changeLongitudeProjection(grid_gradients).sel(longitude=lons, latitude=lats)
+    # np.sum(np.abs(grid_gradients[var].values))
     #######
-    if var=='tcwv' or var=='tas' or var=='ta700' or var=='mslp':
-        ticks=[-0.0025,0,0.0025]
-        levels=np.linspace(-0.0025, 0.0025, 21)
-    elif var=='ua500' or var=='va500' or var=='ua500' or var=='va700' or var=='ua1000':
-        ticks=[-0.0005,0,0.0005]
-        levels=np.linspace(-0.0005, 0.0005, 21)
-    # elif var=='tcwv':
-    #     ticks=[-0.005,-0.005,0,0.005,0.01]
-    #     levels=np.linspace(-0.01, 0.01, 21)
+    if var=='tcwv' or var=='ta700':
+        ticks=[-0.005,0,0.005]
+        levels=np.linspace(-0.005, 0.005, 21)
+    elif var=='va700':
+        ticks=[-0.002,0,0.002]
+        levels=np.linspace(-0.002, 0.002, 21)
     else:
-        ticks=[-0.01,-0.005,0,0.005,0.01]
-        levels=np.linspace(-0.01, 0.01, 21)
+        ticks=[-0.0002,0,0.0002]
+        levels=np.linspace(-0.0002, 0.0002, 21)
     cmap=matplotlib.colors.LinearSegmentedColormap.from_list("", ["purple","blue","turquoise","white","white","yellow","red","pink"])
     fig_=ax[ind_x,ind_y].contourf(grid_gradients.longitude,
                                            grid_gradients.latitude,
@@ -89,8 +86,7 @@ for ind_var, var in enumerate(vars):
                                            extend='both',
                                            linewidths=0.5,
                                            transform=ccrs.PlateCarree())
-    # cbar=fig.colorbar(fig_, ax=ax[ind_x,ind_y], ticks=ticks, fraction=0.035, pad=0.045, orientation="horizontal")
-    cbar=fig.colorbar(fig_, ax=ax[ind_x,ind_y], fraction=0.035, pad=0.045, orientation="horizontal")
+    cbar=fig.colorbar(fig_, ax=ax[ind_x,ind_y], ticks=ticks, fraction=0.035, pad=0.045, orientation="horizontal")
     cbar.set_label('Gradient (dKE/dXi)', rotation=0, labelpad=5, fontsize=10)
     cbar.ax.tick_params(labelsize=8)
     if var=='z700':
